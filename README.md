@@ -1,4 +1,4 @@
-## instalation using pip:
+## installation using pip:
 
 pip install git+https://github.com/kesmarag/sp.git
 
