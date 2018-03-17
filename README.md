@@ -1,13 +1,13 @@
 ## instalation using pip:
 
-pip install git+https://github.com/kesmarag/sp-utils.git
+pip install git+https://github.com/kesmarag/sp.git
 
 
 ## usage
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from kesmarag.sp.utils import SWPT
+from kesmarag.sp import SWPT
 
 signal = np.random.randn(1024,)
 model = SWPT(max_level=3)
