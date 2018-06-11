@@ -1,3 +1,4 @@
+import numpy as np
 import pywt
 from pywt._thresholding import hard, soft
 
@@ -65,3 +66,8 @@ class SWPT(object):
       graycode_order = [x + path for path in graycode_order] + \
                        [y + path for path in graycode_order[::-1]]
     return graycode_order
+
+
+if __name__ == '__main__':
+  swpt = SWPT(max_level=4)
+  print(swpt._get_graycode_order(4))
