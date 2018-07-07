@@ -9,6 +9,7 @@ class SWPT(object):
     self._wavelet = wavelet
     self._max_level = max_level
     self._coeff_dict = {}
+    self._energy_dict = {}
 
   def decompose(self, signal):
     pth = ['']
@@ -24,7 +25,9 @@ class SWPT(object):
         p_run = p
         for i, C in enumerate(coeff[::-1]):
           self._coeff_dict[p_run + 'A'] = C[0]
+          self._energy_dict[p_run + 'A'] = np.linalg.norm(C[0]) ** 2
           self._coeff_dict[p_run + 'D'] = C[1]
+          self._energy_dict[p_run + 'D'] = np.linalg.norm(C[1]) ** 2
           if i < len(coeff) - 1 and len(p_run) < self._max_level - 1:
             pth_new.append(p_run + 'D')
             p_run = p_run + 'A'
@@ -60,6 +63,9 @@ class SWPT(object):
   def get_coefficient_vector(self, name):
     return self._coeff_dict[name]
 
+  def get_energy(self, name):
+    return self._energy_dict[name]
+
   def _get_graycode_order(self, level, x='A', y='D'):
     graycode_order = [x, y]
     for i in range(level - 1):
@@ -69,5 +75,9 @@ class SWPT(object):
 
 
 if __name__ == '__main__':
-  swpt = SWPT(max_level=4)
-  print(swpt._get_graycode_order(4))
+  x = np.random.randn(2048)
+  swpt = SWPT(max_level=2)
+  swpt.decompose(x)
+  wp4 = swpt.get_level(2)
+  print(np.array(wp4).shape)
+  print(swpt.get_energy('DA') / swpt.get_energy('AD'))
