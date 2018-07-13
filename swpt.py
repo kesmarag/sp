@@ -32,11 +32,16 @@ class SWPT(object):
             pth_new.append(p_run + 'D')
             p_run = p_run + 'A'
       pth = list(pth_new)
+    energies = self._get_energies()
+    for k in self._coeff_dict:
+      if len(k) > 0:
+        self._energy_dict[k] = self._energy_dict[k] / energies[len(k) - 1]
 
-  def get_level(self, level, order='freq', thresholding=None, threshold=None):
+  def get_level(self, level, order='freq', thresholding=None, threshold=None, energies=False):
     assert order in ['natural', 'freq']
     r = []
-    result = []
+    result_coeffs = []
+    result_energies = []
     for k in self._coeff_dict:
       if len(k) == level:
         r.append(k)
@@ -44,7 +49,8 @@ class SWPT(object):
       graycode_order = self._get_graycode_order(level)
       for p in graycode_order:
         if p in r:
-          result.append(self._coeff_dict[p])
+          result_coeffs.append(self._coeff_dict[p])
+          result_energies.append(self._energy_dict[p])
     else:
       print('The natural order is not supported yet.')
       exit(1)
@@ -52,13 +58,23 @@ class SWPT(object):
     if thresholding in ['hard', 'soft']:
       if isinstance(threshold, (int, float)):
         if thresholding == 'hard':
-          result = hard(result, threshold)
+          result_coeffs = hard(result_coeffs, threshold)
         else:
-          result = soft(result, threshold)
+          result_coeffs = soft(result_coeffs, threshold)
       else:
         print('Threshold must be an integer or float number')
         exit(1)
-    return result
+    if energies:
+      return result_coeffs, result_energies
+    else:
+      return result_coeffs
+
+  def _get_energies(self):
+      res = [0] * self._max_level
+      for k in self._coeff_dict:
+        if len(k) > 0:
+          res[len(k) - 1] += self._energy_dict[k]
+      return res
 
   def get_coefficient_vector(self, name):
     return self._coeff_dict[name]
@@ -76,8 +92,7 @@ class SWPT(object):
 
 if __name__ == '__main__':
   x = np.random.randn(2048)
-  swpt = SWPT(max_level=2)
+  swpt = SWPT(max_level=5)
   swpt.decompose(x)
-  wp4 = swpt.get_level(2)
-  print(np.array(wp4).shape)
-  print(swpt.get_energy('DA') / swpt.get_energy('AD'))
+  wp4, en = swpt.get_level(5, energies=True)
+  print(en)
