@@ -10,6 +10,7 @@ class SWPT(object):
     self._max_level = max_level
     self._coeff_dict = {}
     self._energy_dict = {}
+    self._entropy_dict = {}
 
   def decompose(self, signal):
     pth = ['']
@@ -28,6 +29,12 @@ class SWPT(object):
           self._energy_dict[p_run + 'A'] = np.linalg.norm(C[0]) ** 2
           self._coeff_dict[p_run + 'D'] = C[1]
           self._energy_dict[p_run + 'D'] = np.linalg.norm(C[1]) ** 2
+          self._entropy_dict[p_run + 'A'] = 0.0
+          self._entropy_dict[p_run + 'D'] = 0.0
+          for c in C[0]:
+            self._entropy_dict[p_run + 'A'] += np.log2(c ** 2) * c ** 2
+          for c in C[1]:
+            self._entropy_dict[p_run + 'D'] += np.log2(c ** 2) * c ** 2
           if i < len(coeff) - 1 and len(p_run) < self._max_level - 1:
             pth_new.append(p_run + 'D')
             p_run = p_run + 'A'
@@ -95,4 +102,4 @@ if __name__ == '__main__':
   swpt = SWPT(max_level=5)
   swpt.decompose(x)
   wp4, en = swpt.get_level(5, energies=True)
-  print(en)
+  print(swpt._get_graycode_order(3))
