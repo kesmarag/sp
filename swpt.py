@@ -33,8 +33,10 @@ class SWPT(object):
           self._entropy_dict[p_run + 'D'] = 0.0
           for c in C[0]:
             self._entropy_dict[p_run + 'A'] += -np.log(c ** 2 / np.linalg.norm(signal, ord=2) ** 2 ) * c ** 2 / np.linalg.norm(signal, ord=2) ** 2
+          self._entropy_dict[p_run + 'A'] = self._entropy_dict[p_run + 'A'] / 2^(len(p_run) + 2)
           for c in C[1]:
             self._entropy_dict[p_run + 'D'] += -np.log(c ** 2 / np.linalg.norm(signal, ord=2) ** 2 ) * c ** 2 / np.linalg.norm(signal, ord=2) ** 2
+          self._entropy_dict[p_run + 'D'] = self._entropy_dict[p_run + 'D'] / 2^(len(p_run) + 2)
           if i < len(coeff) - 1 and len(p_run) < self._max_level - 1:
             pth_new.append(p_run + 'D')
             p_run = p_run + 'A'

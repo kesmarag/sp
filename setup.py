@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='kesmarag-sp',
-      version='0.0.7',
+      version='0.0.8',
       description='Signal processing utilities',
       author='Costas Smaragdakis',
       author_email='kesmarag@gmail.com',
